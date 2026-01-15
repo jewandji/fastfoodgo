@@ -1,0 +1,32 @@
+Metadata-Version: 2.4
+Name: fastfoodgo
+Version: 0.1.0
+Summary: FastFoodGo - Projet DevOps Data & IA
+Author-email: TonNom <ton@email.com>
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+
+\# FastFoodGo
+
+
+
+Plateforme de commande de repas en ligne (Projet DevOps \& Data).
+
+
+
+\## Installation
+
+
+
+1\. Cloner le dépôt :
+
+&nbsp;  ```bash
+
+&nbsp;  git clone <URL\_DU\_REPO>
+
+&nbsp;  cd fastfoodgo
+

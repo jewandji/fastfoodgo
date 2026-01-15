@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/fastfoodgo/__init__.py
+src/fastfoodgo/order.py
+src/fastfoodgo.egg-info/PKG-INFO
+src/fastfoodgo.egg-info/SOURCES.txt
+src/fastfoodgo.egg-info/dependency_links.txt
+src/fastfoodgo.egg-info/requires.txt
+src/fastfoodgo.egg-info/top_level.txt
+tests/test_order.py

@@ -4,10 +4,12 @@ services:
   app:
     build: .
     volumes:
-      - ./src:/app/src  # Le code source
-    ports:              # <--- ATTENTION : 'ports' est aligné avec 'volumes' (pas dedans !)
-      - "8501:8501"     # Le port pour Streamlit
-    command: python -c "import time; print('App is running...'); time.sleep(3600)"
+      - ./src:/app/src
+    ports:
+      - "8501:8501"
+    command: python -c "import time; print('App running...'); time.sleep(3600)"
+    depends_on:
+      - postgres
 
   postgres:
     image: postgres:15
@@ -20,5 +22,18 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # --- AJOUT DE GRAFANA ICI ---
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"  # Le port standard de Grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Mot de passe par défaut
+    depends_on:
+      - postgres
+    volumes:
+      - grafana_data:/var/lib/grafana
+
 volumes:
   postgres_data:
+  grafana_data:  # <--- N'oublie pas d'ajouter ce volume en bas !

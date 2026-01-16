@@ -10,4 +10,5 @@ COPY src/ src/
 # Maintenant que 'src/' est là, pip va bien trouver le code fastfoodgo.
 RUN pip install --no-cache-dir .
 
-CMD ["python"]
+# On lance Streamlit sur le port 8501
+CMD ["streamlit", "run", "src/fastfoodgo/web.py", "--server.port=8501", "--server.address=0.0.0.0"]

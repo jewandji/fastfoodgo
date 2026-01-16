@@ -1,14 +1,14 @@
 version: '3.8'
 
 services:
-  # Notre application Python
   app:
     build: .
     volumes:
-      - ./src:/app/src  # Permet de modifier le code sans reconstruire l'image (Hot reload)
-    command: python -c "import time; print('App is running...'); time.sleep(3600)" # Juste pour garder le conteneur allumé pour l'instant
+      - ./src:/app/src  # Le code source
+    ports:              # <--- ATTENTION : 'ports' est aligné avec 'volumes' (pas dedans !)
+      - "8501:8501"     # Le port pour Streamlit
+    command: python -c "import time; print('App is running...'); time.sleep(3600)"
 
-  # La base de données (Data Warehouse / App DB)
   postgres:
     image: postgres:15
     environment:
@@ -16,7 +16,7 @@ services:
       POSTGRES_PASSWORD: fastfood_password
       POSTGRES_DB: fastfood_db
     ports:
-      - "5432:5432" # Pour y accéder depuis ton PC (DBeaver ou autre)
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

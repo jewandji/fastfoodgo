@@ -19,6 +19,8 @@ classifiers = [
 dependencies = [
     "psycopg2-binary",
     "pandas",
+    "scikit-learn",
+    "streamlit",
 ]
 
 [project.optional-dependencies]

@@ -21,6 +21,7 @@ dependencies = [
     "pandas",
     "scikit-learn",
     "streamlit",
+    "mlxtend",
 ]
 
 [project.optional-dependencies]

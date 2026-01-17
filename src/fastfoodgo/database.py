@@ -3,7 +3,20 @@ import psycopg2
 import time
 
 def get_db_connection():
-    """Tente de se connecter à la base de données avec des retries."""
+    """Tente de se connecter à la base de données."""
+    
+    # 1. PRIORITÉ CLOUD : Si on a une URL complète (donnée par Render ou toi)
+    db_url = os.environ.get("DATABASE_URL")
+    if db_url:
+        try:
+            conn = psycopg2.connect(db_url)
+            print("Connexion CLOUD réussie via DATABASE_URL !")
+            return conn
+        except Exception as e:
+            print(f"Erreur de connexion Cloud : {e}")
+
+    # 2. SINON LOCAL (DOCKER) : On utilise la méthode classique
+    print("Tentative de connexion locale (Docker)...")
     retries = 5
     while retries > 0:
         try:
@@ -13,17 +26,17 @@ def get_db_connection():
                 user=os.environ.get("POSTGRES_USER", "fastfood_user"),
                 password=os.environ.get("POSTGRES_PASSWORD", "fastfood_password")
             )
-            print("Connexion à la base de données réussie !")
+            print("Connexion DOCKER réussie !")
             return conn
         except psycopg2.OperationalError as e:
-            print(f"La base n'est pas encore prête ({e})... On attend 2s.")
+            print(f"La base n'est pas encore prête... On attend 2s.")
             time.sleep(2)
             retries -= 1
     
     raise Exception("Impossible de se connecter à la BDD après plusieurs essais.")
 
 def init_db(conn):
-    """Crée les tables nécessaires si elles n'existent pas (Data Modeling)."""
+    # ... (Le reste de ton code init_db ne change pas, tu peux le garder tel quel)
     commands = (
         """
         CREATE TABLE IF NOT EXISTS orders (
@@ -48,7 +61,7 @@ def init_db(conn):
         cur.execute(command)
     cur.close()
     conn.commit()
-    print("Tables 'orders' et 'order_items' créées/vérifiées !")
+    print("Tables créées/vérifiées !")
 
 if __name__ == "__main__":
     conn = get_db_connection()

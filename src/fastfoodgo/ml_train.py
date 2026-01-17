@@ -1,50 +1,51 @@
 import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
 import pickle
-from sklearn.feature_extraction.text import CountVectorizer
-import numpy as np
 from fastfoodgo.database import get_db_connection
 
 def train_model():
-    print("Démarrage de l'entraînement du modèle de recommandation...")
+    print("Démarrage de l'entraînement IA...")
     conn = get_db_connection()
     
-    # 1. Charger les données : On veut grouper les items par commande
-    # Ex: Commande 1 -> "Burger Frites Soda"
+    # 1. Récupérer les données
     query = """
-        SELECT order_id, STRING_AGG(item_name, ' ') as items
-        FROM order_items
-        GROUP BY order_id
+        SELECT order_id, item_name 
+        FROM order_items 
     """
     df = pd.read_sql(query, conn)
     conn.close()
-    
-    if len(df) < 5:
-        print("Pas assez de données pour entraîner un modèle fiable. Générez plus de commandes avec seed.py !")
-        return
 
-    print(f"Entraînement sur {len(df)} commandes historiques.")
+    if df.empty:
+        print("Pas assez de données pour entraîner l'IA.")
+        return None
 
-    # 2. Créer la matrice de co-occurrence
-    # On regarde quels items apparaissent souvent ensemble
-    vectorizer = CountVectorizer(token_pattern=r"(?u)\b\w+\b|\b\w+\s\w+\b") # Gère les noms composés
-    X = vectorizer.fit_transform(df['items'])
+    # 2. Préparer le format "Panier" (One-Hot Encoding)
+    basket = (df.groupby(['order_id', 'item_name'])['item_name']
+              .count().unstack().reset_index().fillna(0)
+              .set_index('order_id'))
     
-    # Calcul de la matrice de co-occurrence (X transoposé * X)
-    cooc_matrix = (X.T * X) 
-    cooc_matrix.setdiag(0) # On ne recommande pas un item s'il est déjà là (Burger -> Burger)
+    # Convertir en 0 ou 1
+    def encode_units(x):
+        return 1 if x >= 1 else 0
+    basket_sets = basket.applymap(encode_units)
+
+    # 3. Algorithme Apriori (Trouver les produits fréquents)
+    # support=0.1 signifie qu'on garde les combos présents dans 10% des commandes
+    frequent_itemsets = apriori(basket_sets, min_support=0.01, use_colnames=True)
     
-    # 3. Sauvegarder le modèle (Artifact)
-    # En MLOps, on versionne le modèle comme du code
-    model_artifact = {
-        "vectorizer": vectorizer,
-        "cooc_matrix": cooc_matrix,
-        "feature_names": vectorizer.get_feature_names_out()
-    }
+    if frequent_itemsets.empty:
+        print("Aucune tendance trouvée.")
+        return None
+
+    # 4. Générer les règles
+    rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
     
-    with open("recommender_model.pkl", "wb") as f:
-        pickle.dump(model_artifact, f)
-        
-    print("Modèle entraîné et sauvegardé dans 'recommender_model.pkl'")
+    # 5. Sauvegarder le cerveau
+    with open("model_rules.pkl", "wb") as f:
+        pickle.dump(rules, f)
+    
+    print("Modèle entraîné et sauvegardé (model_rules.pkl) !")
+    return rules
 
 if __name__ == "__main__":
     train_model()

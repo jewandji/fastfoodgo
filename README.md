@@ -2,7 +2,7 @@
 
 **FastFoodGo** est une application full-stack simulant la gestion d'un restaurant, de la prise de commande à l'analyse des données, intégrant un pipeline **DevOps complet** et un module d'**Intelligence Artificielle**.
 
-**Démo en ligne :** [https://fastfoodgo-app.onrender.com](https://fastfoodgo-app.onrender.com) *(Si le lien est actif)*
+**Démo en ligne :** [https://fastfoodgo-app.onrender.com](https://fastfoodgo-app.onrender.com) *(Service et base de données suspendu par moment donc le site est mise en arrêt si pour éviter de gaspiller les ressources gratuites de Render)*
 
 ---
 
@@ -10,9 +10,15 @@
 
 ### Dashboard de Pilotage
 > *Génération de commandes en temps réel et suivi du Chiffre d'Affaires.*
+<img width="826" height="409" alt="image" src="https://github.com/user-attachments/assets/d08299e4-c31a-43ed-8c78-57681f570477" />
+
+> <img width="284" height="415" alt="image" src="https://github.com/user-attachments/assets/6fd2d471-173e-4da2-8123-0dcdb888503a" />
+
 
 ### Assistant IA (Cross-Selling)
 > *Système de recommandation basé sur l'algorithme Apriori (Market Basket Analysis).*
+> <img width="836" height="416" alt="image" src="https://github.com/user-attachments/assets/78620379-152f-4c3e-bbb8-cc1d241d9ae7" />
+
 
 
 ---

@@ -45,11 +45,14 @@ cd fastfoodgo
 
 # 2. Lancer les services (App + Base de données locale)
 docker-compose up --build
+```
 
 L'application sera accessible sur : http://localhost:8501
 
 
 ### Option 2 : Installation Manuelle (Python)
+
+```bash
 # Créer un environnement virtuel
 python -m venv venv
 source venv/bin/activate  # ou venv\Scripts\activate sur Windows
